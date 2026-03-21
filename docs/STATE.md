@@ -1,6 +1,6 @@
 # Project State
 
-## Current Status: Milestone 3 Complete
+## Current Status: Milestone 4 Complete
 
 ---
 
@@ -22,19 +22,13 @@
 - [x] `featured` field added to projects schema
 - [x] Real content: Shellmate project, Museick project, first blog post
 - [x] Pagefind search with dark theme styling and data-pagefind-body
+- [x] Typography plugin with dark theme prose overrides
 - [x] Deployed to Vercel with custom domain (ivandankov.com)
-
-## In Progress
-
-None.
-
-## Up Next
-
-### Milestone 4: Polish & Deploy
-- [ ] Responsive pass (mobile + desktop density)
-- [ ] Accessibility audit
-- [ ] Security headers review (`vercel.json`)
-- [ ] CI/CD workflow enablement (optional)
+- [x] Vercel Analytics
+- [x] Responsive pass (mobile header, stacking screenshots)
+- [x] Accessibility (skip-to-content, aria labels, heading hierarchy)
+- [x] Security headers reviewed (vercel.json)
+- [x] Removed failing deploy.yml (Vercel auto-deploys from GitHub)
 
 ## Blockers
 

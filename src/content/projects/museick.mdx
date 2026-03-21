@@ -13,21 +13,36 @@ by choosing your favourite (**Muse**) and least favourite (**Ick**) song each
 month. At the end of the year, Museick compiles these choices into a
 personalised musical wrap-up.
 
+import MediaCarousel from '@/components/ui/MediaCarousel';
+
 ## Demo
 
-<video
-  controls
-  muted
-  playsinline
-  style="width: 100%; max-width: 720px; border-radius: 0.5rem; border: 1px solid var(--color-border);"
->
-  <source src="/assets/museick-demo.mp4" type="video/mp4" />
-</video>
+{/* Mobile: swipe carousel */}
+<div class="not-prose">
+  <MediaCarousel client:visible items={[
+    { type: 'video', src: '/assets/museick-demo.mp4' },
+    { type: 'image', src: '/assets/museick-mobile-1.jpg', alt: 'Museick - Monthly view' },
+    { type: 'image', src: '/assets/museick-mobile-2.jpg', alt: 'Museick - Candidate pool' },
+    { type: 'image', src: '/assets/museick-mobile-3.jpg', alt: 'Museick - Selection' },
+  ]} />
+</div>
 
-<div style="display: flex; gap: 1rem; justify-content: center; margin: 2rem 0;">
-  <img src="/assets/museick-mobile-1.jpg" alt="Museick - Monthly view" width="250" />
-  <img src="/assets/museick-mobile-2.jpg" alt="Museick - Candidate pool" width="250" />
-  <img src="/assets/museick-mobile-3.jpg" alt="Museick - Selection" width="250" />
+{/* Desktop: video + grid */}
+<div class="not-prose hidden sm:block">
+  <video
+    controls
+    muted
+    playsinline
+    style="width: 100%; max-width: 720px; border-radius: 0.5rem; border: 1px solid var(--color-border);"
+  >
+    <source src="/assets/museick-demo.mp4" type="video/mp4" />
+  </video>
+
+  <div class="grid grid-cols-3 gap-4 my-8">
+    <img src="/assets/museick-mobile-1.jpg" alt="Museick - Monthly view" class="rounded-lg border border-[var(--color-border)] w-full" />
+    <img src="/assets/museick-mobile-2.jpg" alt="Museick - Candidate pool" class="rounded-lg border border-[var(--color-border)] w-full" />
+    <img src="/assets/museick-mobile-3.jpg" alt="Museick - Selection" class="rounded-lg border border-[var(--color-border)] w-full" />
+  </div>
 </div>
 
 ## How It Works

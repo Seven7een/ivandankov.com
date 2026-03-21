@@ -6,7 +6,7 @@ import { SITE, SOCIAL_LINKS } from '@/consts';
   <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-[var(--color-text-muted)]">
     <p>&copy; {new Date().getFullYear()} {SITE.title}</p>
     {SOCIAL_LINKS.length > 0 && (
-      <div class="flex gap-4">
+      <nav aria-label="Social links" class="flex gap-4">
         {SOCIAL_LINKS.map(({ href, label }) => (
           <a
             href={href}
@@ -17,7 +17,7 @@ import { SITE, SOCIAL_LINKS } from '@/consts';
             {label}
           </a>
         ))}
-      </div>
+      </nav>
     )}
   </div>
 </footer>

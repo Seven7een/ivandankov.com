@@ -26,9 +26,12 @@ const pageTitle = title ? `${title} | ${SITE.title}` : SITE.title;
     <title>{pageTitle}</title>
   </head>
   <body class="min-h-screen antialiased">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:rounded-lg focus:bg-[var(--color-accent)] focus:text-[var(--color-bg-primary)] focus:text-sm">
+      Skip to content
+    </a>
     <Header />
 
-    <main class="max-w-4xl mx-auto px-6 py-12" data-pagefind-body>
+    <main id="main-content" class="max-w-4xl mx-auto px-6 py-12" data-pagefind-body>
       <slot />
     </main>
 
