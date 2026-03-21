@@ -5,6 +5,7 @@
 ```bash
 npm install              # Install dependencies
 npm run dev              # Dev server at http://localhost:4321
+npm run dev:full         # Dev server + serverless functions (requires vercel CLI)
 ```
 
 ## Build & Preview
@@ -85,6 +86,7 @@ All site-wide config lives in `src/consts.ts`:
 - `SITE` — title, description, author, base URL
 - `NAV_LINKS` — header navigation items
 - `SOCIAL_LINKS` — footer/contact social profiles
+- `CREDLY_BADGES` — certification badge image URLs and verification links
 
 Do not scatter config across files.
 
@@ -96,16 +98,11 @@ This site deploys to **Vercel**. Connect the GitHub repo to Vercel for automatic
 
 Security headers are configured in `vercel.json`.
 
-## Enabling CI/CD
+## CI/CD
 
-The `.github/workflows/deploy.yml` file is commented out by default.
-
-To enable:
-
-1. Go to your Vercel dashboard and note your `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID`
-2. Add these as secrets in your GitHub repo settings (Settings > Secrets > Actions)
-3. Uncomment the workflow file
-4. Push to trigger the pipeline
+- **Vercel** auto-deploys on every push to `main` and generates preview URLs for PRs
+- **GitHub Actions** (`.github/workflows/ci.yml`) runs a build check on every push and PR
+- **Vercel Analytics** is enabled for page view tracking
 
 ---
 
