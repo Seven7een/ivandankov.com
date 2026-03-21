@@ -1,0 +1,6 @@
+# gitleaks configuration
+# https://github.com/gitleaks/gitleaks
+
+[extend]
+# Uses the default gitleaks rules
+# Add project-specific rules below if needed

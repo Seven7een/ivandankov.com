@@ -1,0 +1,25 @@
+---
+import Layout from '@/layouts/Layout.astro';
+---
+
+<Layout title="Search">
+  <section class="space-y-6">
+    <h1 class="text-3xl font-bold">Search</h1>
+    <div id="search" class="min-h-[300px]"></div>
+  </section>
+</Layout>
+
+<script>
+  // Pagefind UI is available after `npm run build` (pagefind indexes the built site)
+  window.addEventListener('DOMContentLoaded', () => {
+    const el = document.getElementById('search');
+    if (el && (window as any).PagefindUI) {
+      new (window as any).PagefindUI({ element: '#search', showSubResults: true });
+    } else if (el) {
+      el.innerHTML = '<p class="text-gray-500">Search is available after building the site. Run <code>npm run build</code> first.</p>';
+    }
+  });
+</script>
+
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+<script src="/pagefind/pagefind-ui.js" is:inline></script>

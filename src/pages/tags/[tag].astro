@@ -1,0 +1,68 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '@/layouts/Layout.astro';
+import Card from '@/components/Card.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  const projects = await getCollection('projects');
+
+  const allTags = [...new Set([
+    ...posts.flatMap((p) => p.data.tags),
+    ...projects.flatMap((p) => p.data.tags),
+  ])];
+
+  return allTags.map((tag) => ({
+    params: { tag },
+    props: {
+      tag,
+      posts: posts.filter((p) => p.data.tags.includes(tag) && !p.data.draft),
+      projects: projects.filter((p) => p.data.tags.includes(tag) && !p.data.draft),
+    },
+  }));
+}
+
+const { tag, posts, projects } = Astro.props;
+---
+
+<Layout title={`Tag: ${tag}`}>
+  <section class="space-y-6">
+    <div class="flex items-center gap-3">
+      <a href="/tags" class="text-sm text-blue-600 hover:underline">&larr; All tags</a>
+      <h1 class="text-3xl font-bold">#{tag}</h1>
+    </div>
+
+    {projects.length > 0 && (
+      <div class="space-y-4">
+        <h2 class="text-xl font-semibold">Projects</h2>
+        <div class="grid gap-4">
+          {projects.map((project) => (
+            <Card
+              href={`/projects/${project.id}`}
+              title={project.data.title}
+              description={project.data.description}
+              tags={project.data.tags}
+            />
+          ))}
+        </div>
+      </div>
+    )}
+
+    {posts.length > 0 && (
+      <div class="space-y-4">
+        <h2 class="text-xl font-semibold">Posts</h2>
+        <div class="grid gap-4">
+          {posts.map((post) => (
+            <Card
+              href={`/pulse/${post.id}`}
+              title={post.data.title}
+              description={post.data.description}
+              tags={post.data.tags}
+              datetime={post.data.pubDatetime.toISOString()}
+            />
+          ))}
+        </div>
+      </div>
+    )}
+  </section>
+</Layout>
