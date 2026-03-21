@@ -2,27 +2,50 @@
 import { SITE, NAV_LINKS } from '@/consts';
 
 const currentPath = Astro.url.pathname;
+const navLinks = NAV_LINKS.filter(l => l.label !== 'Search');
+const searchLink = NAV_LINKS.find(l => l.label === 'Search');
 ---
 
 <header class="border-b border-[var(--color-border)] px-6 py-4">
-  <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
+  <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
     <a href="/" class="font-semibold text-lg text-[var(--color-text-primary)] hover:text-[var(--color-accent)] transition-colors">
       {SITE.title}
     </a>
-    <nav aria-label="Main navigation" class="flex flex-wrap gap-x-5 gap-y-1 text-sm">
-      {NAV_LINKS.map(({ href, label }) => (
+    <nav aria-label="Main navigation" class="flex flex-wrap items-center gap-1.5 text-sm">
+      {navLinks.map(({ href, label }) => {
+        const isActive = currentPath === href || (href !== '/' && currentPath.startsWith(href));
+        return (
+          <a
+            href={href}
+            class:list={[
+              'px-3 py-1 rounded-md transition-all',
+              isActive
+                ? 'bg-[var(--color-bg-tertiary)] text-[var(--color-accent)] font-medium shadow-sm shadow-[var(--color-bg-primary)]'
+                : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)]',
+            ]}
+          >
+            {label}
+          </a>
+        );
+      })}
+      {searchLink && (
         <a
-          href={href}
+          href={searchLink.href}
           class:list={[
-            'transition-colors',
-            currentPath === href || (href !== '/' && currentPath.startsWith(href))
-              ? 'text-[var(--color-accent)] font-medium'
-              : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]',
+            'px-2 py-1 rounded-md transition-all',
+            currentPath === searchLink.href
+              ? 'bg-[var(--color-bg-tertiary)] text-[var(--color-accent)] shadow-sm shadow-[var(--color-bg-primary)]'
+              : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)]',
           ]}
+          aria-label="Search"
+          title="Search"
         >
-          {label}
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
         </a>
-      ))}
+      )}
     </nav>
   </div>
 </header>
