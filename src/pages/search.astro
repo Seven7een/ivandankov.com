@@ -4,7 +4,7 @@ import Layout from '@/layouts/Layout.astro';
 
 <Layout title="Search">
   <section class="space-y-6">
-    <h1 class="text-3xl font-bold">Search</h1>
+    <h1 class="text-3xl font-bold text-[var(--color-text-primary)]">Search</h1>
     <div id="search" class="min-h-[300px]"></div>
   </section>
 </Layout>
@@ -16,7 +16,7 @@ import Layout from '@/layouts/Layout.astro';
     if (el && (window as any).PagefindUI) {
       new (window as any).PagefindUI({ element: '#search', showSubResults: true });
     } else if (el) {
-      el.innerHTML = '<p class="text-gray-500">Search is available after building the site. Run <code>npm run build</code> first.</p>';
+      el.innerHTML = '<p class="text-[var(--color-text-secondary)]">Search is available after building the site. Run <code class="text-[var(--color-accent)]">npm run build</code> first.</p>';
     }
   });
 </script>

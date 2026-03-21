@@ -10,19 +10,24 @@ interface Props {
 const { href, title, description, tags = [], datetime } = Astro.props;
 ---
 
-<a href={href} class="block p-6 border border-gray-200 rounded-lg hover:border-blue-400 transition-colors">
-  <h2 class="font-semibold text-lg">{title}</h2>
-  <p class="text-gray-500 text-sm mt-1">{description}</p>
+<a
+  href={href}
+  class="block p-6 border border-[var(--color-border)] rounded-lg hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] transition-colors"
+>
+  <h2 class="font-semibold text-lg text-[var(--color-text-primary)]">{title}</h2>
+  <p class="text-[var(--color-text-secondary)] text-sm mt-1">{description}</p>
   <div class="flex items-center gap-3 mt-3">
     {datetime && (
-      <time class="text-xs text-gray-400">
+      <time class="text-xs text-[var(--color-text-muted)]">
         {new Date(datetime).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
       </time>
     )}
     {tags.length > 0 && (
-      <div class="flex gap-2">
+      <div class="flex gap-2 flex-wrap">
         {tags.map((tag) => (
-          <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">{tag}</span>
+          <span class="text-xs bg-[var(--color-tag-bg)] text-[var(--color-tag-text)] px-2 py-1 rounded">
+            {tag}
+          </span>
         ))}
       </div>
     )}

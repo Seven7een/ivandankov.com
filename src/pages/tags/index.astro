@@ -13,17 +13,17 @@ const allTags = [...new Set([
 
 <Layout title="Tags">
   <section class="space-y-6">
-    <h1 class="text-3xl font-bold">Tags</h1>
+    <h1 class="text-3xl font-bold text-[var(--color-text-primary)]">Tags</h1>
 
     {allTags.length === 0 && (
-      <p class="text-gray-500">No tags yet.</p>
+      <p class="text-[var(--color-text-secondary)]">No tags yet.</p>
     )}
 
     <div class="flex flex-wrap gap-3">
       {allTags.map((tag) => (
         <a
           href={`/tags/${tag}`}
-          class="text-sm bg-gray-100 text-gray-700 px-3 py-1.5 rounded hover:bg-blue-50 hover:text-blue-600 transition-colors"
+          class="text-sm bg-[var(--color-tag-bg)] text-[var(--color-tag-text)] px-3 py-1.5 rounded hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-accent)] transition-colors"
         >
           {tag}
         </a>

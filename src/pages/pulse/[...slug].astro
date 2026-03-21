@@ -16,21 +16,21 @@ const { Content } = await render(post);
 
 <Layout title={post.data.title} description={post.data.description}>
   <article class="space-y-6">
-    <a href="/pulse" class="text-sm text-blue-600 hover:underline">&larr; Back to Pulse</a>
+    <a href="/pulse" class="text-sm text-[var(--color-accent)] hover:underline">&larr; Back to Pulse</a>
 
-    <h1 class="text-3xl font-bold">{post.data.title}</h1>
+    <h1 class="text-3xl font-bold text-[var(--color-text-primary)]">{post.data.title}</h1>
 
-    <time class="text-sm text-gray-400 block">
+    <time class="text-sm text-[var(--color-text-muted)] block">
       {post.data.pubDatetime.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
     </time>
 
     <div class="flex gap-2">
       {post.data.tags.map((tag) => (
-        <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">{tag}</span>
+        <span class="text-xs bg-[var(--color-tag-bg)] text-[var(--color-tag-text)] px-2 py-1 rounded">{tag}</span>
       ))}
     </div>
 
-    <div class="prose prose-gray max-w-none">
+    <div class="prose prose-invert max-w-none">
       <Content />
     </div>
   </article>

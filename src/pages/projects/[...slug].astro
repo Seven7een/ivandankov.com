@@ -16,28 +16,28 @@ const { Content } = await render(project);
 
 <Layout title={project.data.title} description={project.data.description}>
   <article class="space-y-6">
-    <a href="/projects" class="text-sm text-blue-600 hover:underline">&larr; Back to Projects</a>
+    <a href="/projects" class="text-sm text-[var(--color-accent)] hover:underline">&larr; Back to Projects</a>
 
-    <h1 class="text-3xl font-bold">{project.data.title}</h1>
+    <h1 class="text-3xl font-bold text-[var(--color-text-primary)]">{project.data.title}</h1>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg text-sm">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-[var(--color-bg-secondary)] rounded-lg text-sm">
       <div>
-        <span class="font-semibold">Problem:</span>
-        <p class="text-gray-600 mt-1">{project.data.problem}</p>
+        <span class="font-semibold text-[var(--color-text-primary)]">Problem:</span>
+        <p class="text-[var(--color-text-secondary)] mt-1">{project.data.problem}</p>
       </div>
       <div>
-        <span class="font-semibold">Solution:</span>
-        <p class="text-gray-600 mt-1">{project.data.solution}</p>
+        <span class="font-semibold text-[var(--color-text-primary)]">Solution:</span>
+        <p class="text-[var(--color-text-secondary)] mt-1">{project.data.solution}</p>
       </div>
     </div>
 
     <div class="flex gap-2">
       {project.data.tags.map((tag) => (
-        <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">{tag}</span>
+        <span class="text-xs bg-[var(--color-tag-bg)] text-[var(--color-tag-text)] px-2 py-1 rounded">{tag}</span>
       ))}
     </div>
 
-    <div class="prose prose-gray max-w-none">
+    <div class="prose prose-invert max-w-none">
       <Content />
     </div>
   </article>

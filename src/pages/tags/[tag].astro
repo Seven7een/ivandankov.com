@@ -28,13 +28,13 @@ const { tag, posts, projects } = Astro.props;
 <Layout title={`Tag: ${tag}`}>
   <section class="space-y-6">
     <div class="flex items-center gap-3">
-      <a href="/tags" class="text-sm text-blue-600 hover:underline">&larr; All tags</a>
-      <h1 class="text-3xl font-bold">#{tag}</h1>
+      <a href="/tags" class="text-sm text-[var(--color-accent)] hover:underline">&larr; All tags</a>
+      <h1 class="text-3xl font-bold text-[var(--color-text-primary)]">#{tag}</h1>
     </div>
 
     {projects.length > 0 && (
       <div class="space-y-4">
-        <h2 class="text-xl font-semibold">Projects</h2>
+        <h2 class="text-xl font-semibold text-[var(--color-text-primary)]">Projects</h2>
         <div class="grid gap-4">
           {projects.map((project) => (
             <Card
@@ -50,7 +50,7 @@ const { tag, posts, projects } = Astro.props;
 
     {posts.length > 0 && (
       <div class="space-y-4">
-        <h2 class="text-xl font-semibold">Posts</h2>
+        <h2 class="text-xl font-semibold text-[var(--color-text-primary)]">Posts</h2>
         <div class="grid gap-4">
           {posts.map((post) => (
             <Card
