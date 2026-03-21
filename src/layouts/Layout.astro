@@ -32,5 +32,9 @@ const pageTitle = title ? `${title} | ${SITE.title}` : SITE.title;
     </main>
 
     <Footer />
+    <script>
+      import { inject } from '@vercel/analytics';
+      inject();
+    </script>
   </body>
 </html>
