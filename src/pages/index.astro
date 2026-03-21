@@ -2,38 +2,94 @@
 import { getCollection } from 'astro:content';
 import Layout from '@/layouts/Layout.astro';
 import Card from '@/components/Card.astro';
+import BadgeBar from '@/components/BadgeBar.astro';
+import BentoGrid from '@/components/BentoGrid.astro';
 import { SITE } from '@/consts';
 
 const posts = (await getCollection('blog'))
   .filter((p) => !p.data.draft)
   .sort((a, b) => b.data.pubDatetime.valueOf() - a.data.pubDatetime.valueOf());
 
+const projects = (await getCollection('projects'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDatetime.valueOf() - a.data.pubDatetime.valueOf());
+
+const featuredProjects = projects.filter((p) => p.data.featured);
 const featuredPosts = posts.filter((p) => p.data.featured);
 const recentPosts = posts.filter((p) => !p.data.featured).slice(0, SITE.postPerIndex);
+
+const bentoItems = [
+  {
+    label: 'Current Stack',
+    value: 'AWS, Kubernetes, Terraform',
+    detail: 'Python, Go, TypeScript, Bash',
+  },
+  {
+    label: 'Primary Focus',
+    value: 'DevSecOps & Platform Engineering',
+    detail: 'Security-first infrastructure at scale',
+  },
+  {
+    label: 'Side Project',
+    value: 'Shellmate',
+    detail: 'AI-powered CLI assistant built on AWS Bedrock',
+  },
+];
 ---
 
 <Layout>
-  <section class="space-y-6">
-    <h1 class="text-3xl font-bold text-[var(--color-text-primary)]">Welcome</h1>
-    <p class="text-lg text-[var(--color-text-secondary)]">
-      This is a placeholder site scaffolded by The Forge. Edit this page to get started.
-    </p>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-      <a href="/projects" class="block p-6 border border-[var(--color-border)] rounded-lg hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] transition-colors">
-        <h2 class="font-semibold text-lg text-[var(--color-text-primary)]">Projects</h2>
-        <p class="text-[var(--color-text-secondary)] text-sm mt-1">View project showcases</p>
-      </a>
-      <a href="/pulse" class="block p-6 border border-[var(--color-border)] rounded-lg hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] transition-colors">
-        <h2 class="font-semibold text-lg text-[var(--color-text-primary)]">Pulse</h2>
-        <p class="text-[var(--color-text-secondary)] text-sm mt-1">Read blog posts and updates</p>
-      </a>
+  <!-- Hero -->
+  <section class="flex flex-col sm:flex-row items-start gap-8 mb-10">
+    <img
+      src="/assets/headshot.jpg"
+      alt="Ivan Dankov"
+      width="160"
+      height="160"
+      class="rounded-xl w-32 h-32 sm:w-40 sm:h-40 object-cover shrink-0"
+    />
+    <div class="space-y-3">
+      <h1 class="text-3xl font-bold text-[var(--color-text-primary)]">Ivan Dankov</h1>
+      <p class="text-lg text-[var(--color-text-secondary)]">
+        Senior Engineer at the messy intersection of cybersecurity, distributed systems, and observability.
+      </p>
+      <p class="text-sm text-[var(--color-text-muted)]">
+        Vienna & London &middot; Linux fan &middot; Spaces over tabs
+      </p>
     </div>
   </section>
 
+  <!-- Badges -->
+  <section class="mb-10">
+    <BadgeBar />
+  </section>
+
+  <!-- Quick Stats -->
+  <section class="mb-12">
+    <BentoGrid items={bentoItems} />
+  </section>
+
+  <!-- Featured Projects -->
+  {featuredProjects.length > 0 && (
+    <section class="mb-12 space-y-4">
+      <h2 class="text-xl font-semibold text-[var(--color-text-primary)]">Featured Projects</h2>
+      <div class="grid gap-4">
+        {featuredProjects.map((project) => (
+          <Card
+            href={`/projects/${project.id}`}
+            title={project.data.title}
+            description={project.data.description}
+            tags={project.data.tags}
+            datetime={project.data.pubDatetime.toISOString()}
+          />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Featured Posts -->
   {featuredPosts.length > 0 && (
-    <section class="mt-12 space-y-4">
-      <h2 class="text-2xl font-semibold text-[var(--color-text-primary)]">Featured</h2>
+    <section class="mb-12 space-y-4">
+      <h2 class="text-xl font-semibold text-[var(--color-text-primary)]">Featured</h2>
       <div class="grid gap-4">
         {featuredPosts.map((post) => (
           <Card
@@ -48,9 +104,13 @@ const recentPosts = posts.filter((p) => !p.data.featured).slice(0, SITE.postPerI
     </section>
   )}
 
+  <!-- Recent Posts -->
   {recentPosts.length > 0 && (
-    <section class="mt-12 space-y-4">
-      <h2 class="text-2xl font-semibold text-[var(--color-text-primary)]">Recent Posts</h2>
+    <section class="space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-semibold text-[var(--color-text-primary)]">Recent Posts</h2>
+        <a href="/pulse" class="text-sm text-[var(--color-accent)] hover:text-[var(--color-accent-hover)]">View all &rarr;</a>
+      </div>
       <div class="grid gap-4">
         {recentPosts.map((post) => (
           <Card

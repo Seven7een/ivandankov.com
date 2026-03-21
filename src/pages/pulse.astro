@@ -6,12 +6,32 @@ import Card from '@/components/Card.astro';
 const posts = (await getCollection('blog'))
   .filter((p) => !p.data.draft)
   .sort((a, b) => b.data.pubDatetime.valueOf() - a.data.pubDatetime.valueOf());
+
+const statusItems = [
+  'Building this site with Astro + Tailwind v4',
+  'Diving deeper into Go and platform engineering',
+  'Exploring agentic AI patterns for security automation',
+];
 ---
 
 <Layout title="Pulse">
-  <section class="space-y-6">
+  <section class="space-y-8">
     <h1 class="text-3xl font-bold text-[var(--color-text-primary)]">Pulse</h1>
 
+    <!-- Status Header -->
+    <div class="p-5 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
+      <p class="text-xs uppercase tracking-wider text-[var(--color-text-muted)] mb-3">Currently</p>
+      <ul class="space-y-2">
+        {statusItems.map((item) => (
+          <li class="text-sm text-[var(--color-text-secondary)] flex items-start gap-2">
+            <span class="text-[var(--color-accent)] mt-0.5 shrink-0">&rsaquo;</span>
+            {item}
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <!-- Posts -->
     {posts.length === 0 && (
       <p class="text-[var(--color-text-secondary)]">No posts yet. Add MDX files to <code class="text-[var(--color-accent)]">src/content/blog/</code>.</p>
     )}

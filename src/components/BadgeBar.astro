@@ -1,0 +1,26 @@
+---
+import { CREDLY_BADGES } from '@/consts';
+---
+
+{CREDLY_BADGES.length > 0 && (
+  <div class="flex flex-wrap gap-4 items-center">
+    {CREDLY_BADGES.map(({ src, href, alt }) => (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="shrink-0 rounded-md overflow-hidden opacity-80 hover:opacity-100 transition-opacity"
+        title={alt}
+      >
+        <img
+          src={src}
+          alt={alt}
+          width="64"
+          height="64"
+          loading="lazy"
+          class="w-16 h-16"
+        />
+      </a>
+    ))}
+  </div>
+)}

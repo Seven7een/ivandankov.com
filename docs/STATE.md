@@ -1,6 +1,6 @@
 # Project State
 
-## Current Status: Milestone 1 Complete
+## Current Status: Milestone 2 Complete
 
 ---
 
@@ -11,8 +11,15 @@
 - [x] Layout & global styling (dark muted palette, system fonts, CSS custom properties)
 - [x] `consts.ts` configuration (site metadata, nav links, social links, Credly badges)
 - [x] All components themed (Header, Footer, Card)
-- [x] All page scaffolds themed (home, about, projects, pulse, search, tags, 404, slug pages)
+- [x] All page scaffolds themed for dark palette
 - [x] Headshot downloaded to `public/assets/headshot.jpg`
+- [x] Home page — hero with headshot, BadgeBar, BentoGrid, featured/recent posts
+- [x] About page — narrative, SkillsMap, contact form + mailto link
+- [x] Projects page — problem/solution card layout
+- [x] Pulse page — status header + blog feed
+- [x] Custom components: BadgeBar, BentoGrid, SkillsMap
+- [x] Contact form backend (Vercel serverless + Gmail SMTP via Nodemailer)
+- [x] `featured` field added to projects schema
 
 ## In Progress
 
@@ -20,23 +27,12 @@ None.
 
 ## Up Next
 
-### Milestone 2: Core Pages
-- [ ] Home page — hero, badge bar, bento grid, featured highlights
-- [ ] About page — narrative, skills map, contact form
-- [ ] Projects page — gallery with search/filter, problem/solution cards
-- [ ] Pulse page — blog feed with status header
-
-### Milestone 3: Custom Components
-- [ ] `BadgeBar.astro` — certification badges (remote Credly images + verification links)
-- [ ] `BentoGrid.astro` — quick stats grid
-- [ ] `SkillsMap.astro` — categorized skills with tag links
-
-### Milestone 4: Content & Search
-- [ ] Sample blog post MDX
-- [ ] Sample project MDX
+### Milestone 3: Content & Search
+- [ ] Sample blog post MDX (replace placeholder)
+- [ ] Sample project MDX (replace placeholder)
 - [ ] Pagefind search integration on projects and pulse pages
 
-### Milestone 5: Polish & Deploy
+### Milestone 4: Polish & Deploy
 - [ ] Responsive pass (mobile + desktop density)
 - [ ] Accessibility audit
 - [ ] Security headers review (`vercel.json`)

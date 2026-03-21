@@ -1,12 +1,199 @@
 ---
 import Layout from '@/layouts/Layout.astro';
+import SkillsMap from '@/components/SkillsMap.astro';
+
+const skillCategories = [
+  {
+    category: 'Cloud & Infrastructure',
+    skills: ['AWS', 'Kubernetes', 'Terraform', 'Docker', 'ArgoCD', 'GitOps'],
+  },
+  {
+    category: 'Security',
+    skills: ['Threat Modeling', 'Pentesting', 'MITRE ATT&CK', 'Reverse Engineering', 'Burp Suite', 'Kali Linux'],
+  },
+  {
+    category: 'Languages',
+    skills: ['Python', 'Go', 'TypeScript', 'Bash', 'Java', 'SQL'],
+  },
+  {
+    category: 'Observability & Automation',
+    skills: ['Splunk', 'CloudWatch', 'CI/CD', 'GitHub Actions', 'GitLab CI'],
+  },
+  {
+    category: 'Systems',
+    skills: ['Linux', 'Distributed Systems', 'Microservices', 'Serverless', 'Networking'],
+  },
+  {
+    category: 'Data',
+    skills: ['PostgreSQL', 'MongoDB', 'DynamoDB', 'Redis'],
+  },
+];
 ---
 
 <Layout title="About">
-  <section class="space-y-6">
-    <h1 class="text-3xl font-bold text-[var(--color-text-primary)]">About</h1>
-    <p class="text-lg text-[var(--color-text-secondary)]">
-      This is the about page. Tell your story here.
-    </p>
-  </section>
+  <article class="space-y-12">
+    <!-- Intro -->
+    <section class="space-y-6">
+      <h1 class="text-3xl font-bold text-[var(--color-text-primary)]">About</h1>
+
+      <div class="space-y-4 text-[var(--color-text-secondary)] leading-relaxed">
+        <p>
+          I'm a Senior Engineer who's spent the last few years working at the
+          intersection of security, distributed systems, and "please don't page
+          me at 3am again." Currently at
+          <a href="https://aws.amazon.com" target="_blank" rel="noopener noreferrer" class="text-[var(--color-accent)] hover:text-[var(--color-accent-hover)]">AWS</a>
+          in London, working on AuthN/AuthZ Security Services, previously
+          building cyber security tools at
+          <a href="https://www.roke.co.uk" target="_blank" rel="noopener noreferrer" class="text-[var(--color-accent)] hover:text-[var(--color-accent-hover)]">Roke</a>.
+        </p>
+
+        <p>
+          My day-to-day is a mix of designing secure infrastructure, automating
+          away operational pain, and trying to make sure nothing leaks, breaks,
+          or catches fire. I care a lot about operational excellence —
+          eliminating toil, building good observability, and making systems that
+          don't need babysitting.
+        </p>
+
+        <p>
+          Before AWS, I was at Roke in the Cyber Security and Networks
+          department, where everything had a security-first focus. I also ran
+          weekly Cyber Clubs where engineers at all levels would get together to
+          hack boxes, discuss new vulnerabilities, and generally nerd out about
+          security.
+        </p>
+
+        <p>
+          I studied Computer Science at the University of Southampton (First
+          Class Honours), where the obsession with systems and security properly
+          took hold in-between long sessions of League of Legends.
+        </p>
+
+        <p>
+          Outside of work, I keep up with security podcasts
+          (<a href="https://darknetdiaries.com" target="_blank" rel="noopener noreferrer" class="text-[var(--color-accent)] hover:text-[var(--color-accent-hover)]">Darknet Diaries</a>,
+          <a href="https://risky.biz" target="_blank" rel="noopener noreferrer" class="text-[var(--color-accent)] hover:text-[var(--color-accent-hover)]">Risky Business</a>),
+          tinker with personal projects, and obsessively automate away
+          everything I can to make the most of the limited time we have in each
+          day — and to still have a work-life balance.
+        </p>
+
+        <p>
+          I believe in owning problems end-to-end, moving fast on reversible
+          decisions, and writing code that the on-call engineer at 3am (me)
+          won't curse you for. I'm a bit of an AI-convert — my security-first
+          background means LLMs and agents set my spidey-sense on edge, but I'm
+          fundamentally sure they're here to stay. I'm integrating them where
+          appropriate and thinking seriously about how to leverage the
+          productivity benefits without forgetting how to code, building
+          horrible bloated unobservable systems, or automating myself out of a
+          job. AI won't replace us any time soon, but value generation will move
+          up the stack from rote, automatable, surface-level work — so I'm doing
+          my best to stay relevant.
+        </p>
+      </div>
+    </section>
+
+    <!-- Skills -->
+    <section class="space-y-6">
+      <h2 class="text-2xl font-semibold text-[var(--color-text-primary)]">Skills</h2>
+      <SkillsMap categories={skillCategories} />
+    </section>
+
+    <!-- Contact -->
+    <section class="space-y-6">
+      <h2 class="text-2xl font-semibold text-[var(--color-text-primary)]">Get in Touch</h2>
+      <p class="text-[var(--color-text-secondary)]">
+        Want to chat about a role, a project, or just talk shop?
+        <a
+          href="mailto:contact@ivandankov.com"
+          class="text-[var(--color-accent)] hover:text-[var(--color-accent-hover)]"
+        >Email me directly</a>
+        or use the form below. CV available on request.
+      </p>
+
+      <form id="contact-form" class="space-y-4 max-w-lg">
+        <div>
+          <label for="name" class="block text-sm text-[var(--color-text-muted)] mb-1">Name</label>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            required
+            class="w-full px-3 py-2 rounded-lg bg-[var(--color-bg-secondary)] border border-[var(--color-border)] text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:border-[var(--color-accent)] focus:outline-none transition-colors"
+            placeholder="Your name"
+          />
+        </div>
+        <div>
+          <label for="email" class="block text-sm text-[var(--color-text-muted)] mb-1">Email</label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            required
+            class="w-full px-3 py-2 rounded-lg bg-[var(--color-bg-secondary)] border border-[var(--color-border)] text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:border-[var(--color-accent)] focus:outline-none transition-colors"
+            placeholder="you@example.com"
+          />
+        </div>
+        <div>
+          <label for="message" class="block text-sm text-[var(--color-text-muted)] mb-1">Message</label>
+          <textarea
+            name="message"
+            id="message"
+            rows="5"
+            required
+            class="w-full px-3 py-2 rounded-lg bg-[var(--color-bg-secondary)] border border-[var(--color-border)] text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:border-[var(--color-accent)] focus:outline-none transition-colors resize-y"
+            placeholder="What's on your mind?"
+          ></textarea>
+        </div>
+        <button
+          type="submit"
+          id="contact-submit"
+          class="px-6 py-2 rounded-lg bg-[var(--color-accent)] text-[var(--color-bg-primary)] font-medium hover:bg-[var(--color-accent-hover)] transition-colors"
+        >
+          Send
+        </button>
+        <p id="contact-status" class="text-sm hidden"></p>
+      </form>
+
+      <script>
+        const form = document.getElementById('contact-form') as HTMLFormElement;
+        const btn = document.getElementById('contact-submit') as HTMLButtonElement;
+        const status = document.getElementById('contact-status') as HTMLParagraphElement;
+
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          btn.disabled = true;
+          btn.textContent = 'Sending...';
+          status.classList.add('hidden');
+
+          const data = Object.fromEntries(new FormData(form));
+
+          try {
+            const res = await fetch('/api/contact', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data),
+            });
+
+            if (res.ok) {
+              status.textContent = 'Message sent — thanks!';
+              status.className = 'text-sm text-green-400';
+              form.reset();
+            } else {
+              const { error } = await res.json();
+              status.textContent = error || 'Something went wrong.';
+              status.className = 'text-sm text-red-400';
+            }
+          } catch {
+            status.textContent = 'Failed to send. Try again later.';
+            status.className = 'text-sm text-red-400';
+          }
+
+          btn.disabled = false;
+          btn.textContent = 'Send';
+        });
+      </script>
+    </section>
+  </article>
 </Layout>

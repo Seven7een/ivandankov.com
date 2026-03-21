@@ -1,0 +1,25 @@
+---
+interface BentoItem {
+  label: string;
+  value: string;
+  detail?: string;
+}
+
+interface Props {
+  items: BentoItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  {items.map(({ label, value, detail }) => (
+    <div class="p-5 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
+      <p class="text-xs uppercase tracking-wider text-[var(--color-text-muted)] mb-2">{label}</p>
+      <p class="text-[var(--color-text-primary)] font-medium">{value}</p>
+      {detail && (
+        <p class="text-sm text-[var(--color-text-secondary)] mt-1">{detail}</p>
+      )}
+    </div>
+  ))}
+</div>

@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '@/layouts/Layout.astro';
-import Card from '@/components/Card.astro';
 
 const projects = (await getCollection('projects'))
   .filter((p) => !p.data.draft)
@@ -9,22 +8,45 @@ const projects = (await getCollection('projects'))
 ---
 
 <Layout title="Projects">
-  <section class="space-y-6">
+  <section class="space-y-8">
     <h1 class="text-3xl font-bold text-[var(--color-text-primary)]">Projects</h1>
 
     {projects.length === 0 && (
       <p class="text-[var(--color-text-secondary)]">No projects yet. Add MDX files to <code class="text-[var(--color-accent)]">src/content/projects/</code>.</p>
     )}
 
-    <div class="grid gap-4">
+    <div class="grid gap-6">
       {projects.map((project) => (
-        <Card
+        <a
           href={`/projects/${project.id}`}
-          title={project.data.title}
-          description={project.data.description}
-          tags={project.data.tags}
-          datetime={project.data.pubDatetime.toISOString()}
-        />
+          class="block p-6 border border-[var(--color-border)] rounded-lg hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] transition-colors"
+        >
+          <h2 class="font-semibold text-lg text-[var(--color-text-primary)]">{project.data.title}</h2>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3 text-sm">
+            <div>
+              <span class="text-[var(--color-text-muted)]">Problem:</span>
+              <span class="text-[var(--color-text-secondary)] ml-1">{project.data.problem}</span>
+            </div>
+            <div>
+              <span class="text-[var(--color-text-muted)]">Solution:</span>
+              <span class="text-[var(--color-text-secondary)] ml-1">{project.data.solution}</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 mt-4">
+            <time class="text-xs text-[var(--color-text-muted)]">
+              {project.data.pubDatetime.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+            </time>
+            <div class="flex gap-2 flex-wrap">
+              {project.data.tags.map((tag: string) => (
+                <span class="text-xs bg-[var(--color-tag-bg)] text-[var(--color-tag-text)] px-2 py-1 rounded">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </a>
       ))}
     </div>
   </section>
