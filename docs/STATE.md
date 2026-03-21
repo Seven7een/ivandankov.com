@@ -1,6 +1,6 @@
 # Project State
 
-## Current Status: Milestone 2 Complete
+## Current Status: Milestone 3 Complete
 
 ---
 
@@ -20,6 +20,9 @@
 - [x] Custom components: BadgeBar, BentoGrid, SkillsMap
 - [x] Contact form backend (Vercel serverless + Gmail SMTP via Nodemailer)
 - [x] `featured` field added to projects schema
+- [x] Real content: Shellmate project, Museick project, first blog post
+- [x] Pagefind search with dark theme styling and data-pagefind-body
+- [x] Deployed to Vercel with custom domain (ivandankov.com)
 
 ## In Progress
 
@@ -27,16 +30,10 @@ None.
 
 ## Up Next
 
-### Milestone 3: Content & Search
-- [ ] Sample blog post MDX (replace placeholder)
-- [ ] Sample project MDX (replace placeholder)
-- [ ] Pagefind search integration on projects and pulse pages
-
 ### Milestone 4: Polish & Deploy
 - [ ] Responsive pass (mobile + desktop density)
 - [ ] Accessibility audit
 - [ ] Security headers review (`vercel.json`)
-- [ ] Final Vercel deployment
 - [ ] CI/CD workflow enablement (optional)
 
 ## Blockers

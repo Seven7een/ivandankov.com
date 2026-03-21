@@ -1,0 +1,77 @@
+---
+title: "Museick"
+description: "A calendar-based music memory journal with Spotify integration — pick your Muse and Ick each month."
+problem: "Keeping track of your favourite music in a notepad gets old fast when you're addicted to top 10s and tier lists."
+solution: "A monthly music journal that integrates with Spotify for search, selection, and automatic playlist generation."
+tags: ["go", "react", "mongodb", "spotify", "docker"]
+pubDatetime: 2025-03-01
+featured: true
+---
+
+A calendar-based music journal that helps you reflect on your listening habits
+by choosing your favourite (**Muse**) and least favourite (**Ick**) song each
+month. At the end of the year, Museick compiles these choices into a
+personalised musical wrap-up.
+
+## Demo
+
+<video
+  controls
+  muted
+  playsinline
+  style="width: 100%; max-width: 720px; border-radius: 0.5rem; border: 1px solid var(--color-border);"
+>
+  <source src="/assets/museick-demo.mp4" type="video/mp4" />
+</video>
+
+<div style="display: flex; gap: 1rem; justify-content: center; margin: 2rem 0;">
+  <img src="/assets/museick-mobile-1.jpg" alt="Museick - Monthly view" width="250" />
+  <img src="/assets/museick-mobile-2.jpg" alt="Museick - Candidate pool" width="250" />
+  <img src="/assets/museick-mobile-3.jpg" alt="Museick - Selection" width="250" />
+</div>
+
+## How It Works
+
+Each month you build a candidate pool — a shortlist of potential picks as you
+go. At the end of the month, you choose your top and bottom song, album, or
+artist. Over time you build up a personal music timeline.
+
+Search and selection happens directly via the Spotify integration, and you can
+export your recap as a Spotify playlist automatically.
+
+## Features
+
+- **Muses & Icks** — choose your top and bottom song/album/artist each month
+- **Candidate Pool** — build a shortlist as the month goes on
+- **Spotify Integration** — search, select, and export playlists directly
+
+## Tech Stack
+
+- **Frontend:** React (Material UI)
+- **Backend:** Go (Gin framework)
+- **Database:** MongoDB
+- **Auth:** Clerk
+- **Music API:** Spotify
+- **Deployment:** Railway, Docker, Nginx
+- **CI/CD:** GitHub Actions
+- **API Docs:** Swagger UI
+
+## Limitations
+
+Museick uses the Spotify API in development mode, which caps usage at 5
+allow-listed users. Getting a production API account requires Spotify's
+approval process, which is on the to-do list. Spotify also removed the
+ability to preview songs on third-party sites, which is a shame — it would
+have been great to let people listen to snippets directly in the app.
+
+## What's Next
+
+- Production Spotify API approval
+- Per-selection notes or stories
+- Global charts (most common Muse/Ick of the year) and end of year recap
+- Shareable public recap pages
+- Track selection change history for stats
+
+## Links
+
+- [GitHub](https://github.com/Seven7een/museick)

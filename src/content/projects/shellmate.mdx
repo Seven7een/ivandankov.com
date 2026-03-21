@@ -1,0 +1,64 @@
+---
+title: "Shellmate"
+description: "AI-powered natural language to shell command converter using AWS Bedrock."
+problem: "Complex shell commands are hard to remember and slow to look up."
+solution: "Natural language to shell command converter powered by AWS Bedrock, deployed entirely in your own AWS account."
+tags: ["python", "aws", "ai", "cli", "bash"]
+pubDatetime: 2025-06-01
+featured: true
+---
+
+AI-powered natural language to shell command converter using AWS Bedrock.
+
+```bash
+shellmate "list all python files older than 5 days"
+# Generates: find . -name "*.py" -mtime +5
+```
+
+## Demo
+
+<img src="/assets/shellmate-demo.gif" alt="Shellmate Demo" width="1100" />
+
+## How It Works
+
+Type what you want in plain English, get back the shell command. Shellmate
+runs on AWS Bedrock, so your queries stay in your own AWS
+account — no data leaves your infrastructure.
+
+The system prompt is tuned to generate simple, intuitive commands that follow
+standard Unix/Linux conventions. You can customize it further in
+`aws/lambda_function.py` for your specific use cases.
+
+## Install
+
+```bash
+# Deploy AWS infrastructure
+./shellmate-installer.sh deploy
+
+# Install locally
+./shellmate-installer.sh install
+```
+
+One-script deployment — anyone can spin it up in their own AWS
+account with minimal setup.
+
+## Usage
+
+```bash
+shellmate "show disk usage"
+shellmate "find large files bigger than 100MB"
+shellmate "kill all processes listening on port 3000"
+```
+
+## Tech Stack
+
+- **Python** + **Bash** for the CLI
+- **AWS Bedrock** for the LLM backend
+- **AWS SAM** for infrastructure deployment
+- Data sovereignty by design — nothing leaves your account
+
+## Links
+
+- [GitHub](https://github.com/Seven7een/shellmate)
+- [FAQ](https://github.com/Seven7een/shellmate/blob/main/FAQ.md)
+- [Implementation Details](https://github.com/Seven7een/shellmate/blob/main/IMPLEMENTATION.md)

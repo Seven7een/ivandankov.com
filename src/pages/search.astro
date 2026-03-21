@@ -9,17 +9,46 @@ import Layout from '@/layouts/Layout.astro';
   </section>
 </Layout>
 
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+<script src="/pagefind/pagefind-ui.js" is:inline></script>
+
+<style is:global>
+  :root {
+    --pagefind-ui-scale: 1;
+    --pagefind-ui-primary: var(--color-accent);
+    --pagefind-ui-text: var(--color-text-primary);
+    --pagefind-ui-background: var(--color-bg-secondary);
+    --pagefind-ui-border: var(--color-border);
+    --pagefind-ui-tag: var(--color-tag-bg);
+    --pagefind-ui-border-width: 1px;
+    --pagefind-ui-border-radius: 8px;
+    --pagefind-ui-font: var(--font-sans);
+  }
+
+  .pagefind-ui__result-link {
+    color: var(--color-text-primary) !important;
+  }
+
+  .pagefind-ui__result-link:hover {
+    color: var(--color-accent) !important;
+  }
+
+  .pagefind-ui__result-excerpt {
+    color: var(--color-text-secondary) !important;
+  }
+
+  .pagefind-ui__message {
+    color: var(--color-text-muted) !important;
+  }
+</style>
+
 <script>
-  // Pagefind UI is available after `npm run build` (pagefind indexes the built site)
   window.addEventListener('DOMContentLoaded', () => {
     const el = document.getElementById('search');
     if (el && (window as any).PagefindUI) {
       new (window as any).PagefindUI({ element: '#search', showSubResults: true });
     } else if (el) {
-      el.innerHTML = '<p class="text-[var(--color-text-secondary)]">Search is available after building the site. Run <code class="text-[var(--color-accent)]">npm run build</code> first.</p>';
+      el.innerHTML = '<p style="color: var(--color-text-secondary)">Search is available after building the site. Run <code style="color: var(--color-accent)">npm run build</code> first.</p>';
     }
   });
 </script>
-
-<link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
-<script src="/pagefind/pagefind-ui.js" is:inline></script>
