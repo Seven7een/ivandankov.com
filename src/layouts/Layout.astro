@@ -2,6 +2,7 @@
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import { SITE } from '@/consts';
+import Analytics from '@vercel/analytics/astro';
 import '@/styles/global.css';
 
 interface Props {
@@ -32,9 +33,6 @@ const pageTitle = title ? `${title} | ${SITE.title}` : SITE.title;
     </main>
 
     <Footer />
-    <script>
-      import { inject } from '@vercel/analytics';
-      inject();
-    </script>
+    <Analytics />
   </body>
 </html>
