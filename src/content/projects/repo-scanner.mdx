@@ -1,7 +1,7 @@
 ---
 title: "Repo Security Scanner"
 description: "A Docker container that scans GitHub and GitLab repos for secrets and PII using gitleaks and Claude AI."
-problem: "Public repos leak secrets constantly — API keys in commit history, emails in configs, internal hostnames in docs. Regex tools catch patterns but miss contextual leaks."
+problem: "Public repos leak secrets constantly — API keys in commit history, emails in configs, internal hostnames in docs. Regex tools catch patterns but miss contextual leaks. I'm building *fast* with AI and want to not do this."
 solution: "A standalone Docker container combining gitleaks (regex, full git history) with Claude AI (contextual analysis of HEAD) to produce actionable security reports."
 tags: ["python", "docker", "gitleaks", "aws-bedrock", "security"]
 pubDatetime: 2026-03-22

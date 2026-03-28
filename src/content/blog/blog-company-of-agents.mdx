@@ -20,7 +20,7 @@ But first, I had to get the platform running.
 
 ## The Setup Gauntlet
 
-The hardware is a Beelink SER mini PC — Ryzen 7, 12 GB RAM, 500 GB NVMe —
+The hardware is a mini PC — Ryzen 7, 12 GB RAM, 500 GB NVMe —
 sitting on a private ZeroTier mesh network. All services bind to the ZeroTier
 interface. Nothing is exposed to the public internet except SSH.
 
@@ -64,9 +64,8 @@ that's waiting when I wake up.
 
 The personality files aren't flavour text — they're the primary behavioural
 guardrails. Aiden is sharp and opinionated, doesn't do the work himself.
-Tux is the cautious sysadmin where `--dry-run` is a love language. Koda
-writes code with a security-first mindset. Seb handles calendar and
-scheduling.
+Tux is the cautious sysadmin. Koda writes code with a security-first mindset.
+Seb handles calendar and scheduling.
 
 But personalities only go so far. The real question was: how do you give
 agents enough access to be useful without letting them break things?
@@ -176,7 +175,10 @@ Designing for amnesia is half the architecture.
 **The manager pattern works.** One point of contact who delegates to
 specialists is dramatically better than managing agents individually. Aiden
 translated plain English into scoped tasks for the right agent and handled
-diagnosis when things went wrong.
+diagnosis when things went wrong. This does get expensive, since you have to
+include all the context back and forth in each telegram message, but it does work
+and is great when you then want the managing agent to also help you draft The
+blogpost describing the whole thing - I always hated taking notes by hand!
 
 **The manager can also be the cowboy.** Aiden's personality says he delegates
 and verifies — he doesn't do the work himself. In practice, under time
@@ -202,10 +204,10 @@ one.
 
 ## What's Next
 
-- Calendar and email integration for the personal assistant
-- Trace findings back to their first commit, then generate scripts to scrub
-  them from history
+- Calendar and email integration for the personal assistant (oh God this is terrifying)
 - Separate OS users per agent for proper privilege isolation
+- Messing with this and iterating until it just becomes easier to go fully managed and migrate
+  from OpenClaw to Claude Code channels
 
 ---
 

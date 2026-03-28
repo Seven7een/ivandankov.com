@@ -1,7 +1,7 @@
 ---
 title: "Voice Diary"
 description: "A self-hosted PWA that records voice notes throughout the day and compiles them into diary entries using Claude at 3 AM."
-problem: "I wanted a voice diary — talk into my phone throughout the day and wake up to a written diary entry. Nothing does this without shipping audio to someone else's cloud."
+problem: "I wanted a voice diary — talk into my phone throughout the day and wake up to a written diary entry. No writing by hand so that I'll actually keep doing it."
 solution: "A PWA running on a home server that records voice notes, then transcribes locally via Whisper and compiles them into diary entries using Claude at 3 AM daily."
 tags: ["python", "fastapi", "postgresql", "docker", "aws-bedrock", "pwa"]
 pubDatetime: 2026-03-22
@@ -38,7 +38,7 @@ narrative.
 ## Features
 
 - **One-tap recording** — PWA with MediaRecorder API, works offline
-- **Self-hosted** — all audio stays on your hardware
+- **Self-hosted** — all data stays on your hardware or in your bedrock account
 - **Dual transcription** — local Whisper or AWS Transcribe
 - **AI compilation** — Claude writes diary entries from transcripts
 - **Scheduled** — auto-compiles at 3 AM daily
@@ -83,13 +83,6 @@ origins. Since the app runs on a private network IP, not localhost, real
 HTTPS was required — solved with mkcert generating locally-trusted
 certificates.
 
-**Bedrock doesn't support audio.** The original plan was to send recordings
-directly to Claude for both transcription and compilation in one call.
-Bedrock doesn't support audio content blocks — not via the Converse API, not
-via InvokeModel. The fix was a two-stage pipeline: Whisper handles
-speech-to-text locally, then Claude gets clean text for the creative work.
-Ended up cleaner than the original design.
-
 **TLS everywhere.** Originally the app handled HTTPS itself via uvicorn's
 `--ssl-keyfile` flag — cert paths baked into the app container, healthchecks
 needing `ssl._create_unverified_context()` hacks. Moved to an Nginx TLS
@@ -101,3 +94,8 @@ across every service.
 
 Live and recording daily. Built with
 [The Forge](https://github.com/Seven7een/the-forge) framework conventions.
+
+## What's Next
+
+**Bedrock data automation** - This accepts audio - can go straight there and bypass weaker
+whisper model and AWS Transcribe 
