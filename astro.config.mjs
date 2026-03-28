@@ -3,7 +3,10 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
+import fs from 'node:fs';
 import { SITE } from './src/consts';
+
+const isDev = process.env.NODE_ENV !== 'production';
 
 export default defineConfig({
   site: SITE.website,
@@ -16,9 +19,11 @@ export default defineConfig({
     },
   },
   integrations: [mdx(), sitemap(), react()],
-  server: {
-    host: '0.0.0.0',
-  },
+  ...(isDev && process.env.DEV_HOST ? {
+    server: {
+      host: process.env.DEV_HOST,
+    },
+  } : {}),
   vite: {
     resolve: {
       alias: {
@@ -26,5 +31,13 @@ export default defineConfig({
       },
     },
     plugins: [tailwindcss()],
+    ...(isDev && process.env.DEV_TLS_KEY && process.env.DEV_TLS_CERT ? {
+      server: {
+        https: {
+          key: fs.readFileSync(process.env.DEV_TLS_KEY),
+          cert: fs.readFileSync(process.env.DEV_TLS_CERT),
+        },
+      },
+    } : {}),
   },
 });
