@@ -21,9 +21,10 @@ const pageTitle = title ? `${title} | ${SITE.title}` : SITE.title;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <meta name="author" content={SITE.author} />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
-    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <!-- DEV: using -dev icon variants. Production: remove "-dev" suffix from all icon paths -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32-dev.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192-dev.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon-dev.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#141419" />
     <link rel="sitemap" href="/sitemap-index.xml" />

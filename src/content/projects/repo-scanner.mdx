@@ -1,0 +1,131 @@
+---
+title: "Repo Security Scanner"
+description: "A Docker container that scans GitHub and GitLab repos for secrets and PII using gitleaks and Claude AI."
+problem: "Public repos leak secrets constantly — API keys in commit history, emails in configs, internal hostnames in docs. Regex tools catch patterns but miss contextual leaks."
+solution: "A standalone Docker container combining gitleaks (regex, full git history) with Claude AI (contextual analysis of HEAD) to produce actionable security reports."
+tags: ["python", "docker", "gitleaks", "aws-bedrock", "security"]
+pubDatetime: 2026-03-22
+featured: true
+---
+
+## The Problem
+
+Public repositories leak secrets constantly. API keys buried in commit history,
+email addresses in configs, internal hostnames in documentation. Tools like
+gitleaks catch pattern-based secrets well, but miss contextual leaks — things
+that look innocuous individually but reveal sensitive information in context.
+
+I wanted one command that scans all my public repos, combines regex scanning
+with AI analysis, and gives me an actionable report.
+
+## How It Works
+
+```bash
+docker run --rm -v ./output:/output -e GITHUB_USERS=myusername repo-security-scanner --all
+```
+
+The scanner discovers all public repos for the given accounts, clones them
+with full history, runs gitleaks with custom PII rules, then sends each
+repo's source to Claude for contextual analysis.
+
+1. **Discover** — GitHub/GitLab API to enumerate public repos
+2. **Clone** — `git clone --mirror` for full history, cached between runs
+3. **gitleaks** — regex scan of entire git history
+4. **AI scan** — Claude analyzes HEAD + recent commits for contextual leaks
+5. **Report** — JSON + Markdown to mounted volume
+6. **Email** — optional SMTP delivery
+
+## What It Finds
+
+**gitleaks catches:** API keys, tokens, passwords, private keys, emails,
+phone numbers, internal IPs — anything matching a pattern across the entire
+git history.
+
+**The AI catches what regex can't:**
+- Comments mentioning internal tooling or credentials
+- Filesystem paths revealing usernames
+- Dev credentials that look like placeholders but aren't
+- Commit metadata linking pseudonymous accounts to real identities
+
+In testing against 11 repos, gitleaks found 523 raw hits. After applying
+user exclusions, that dropped to 8. The AI found 4 additional contextual
+findings that gitleaks missed entirely.
+
+## Features
+
+- **One command** — Docker container, no installation
+- **Dual scanning** — gitleaks (regex, full history) + Claude AI (contextual, HEAD)
+- **Flag-controlled** — `--gitleaks`, `--ai`, `--all`
+- **User exclusions** — `user-ignores.toml` for personal allowlists
+- **Cached clones** — mount a volume for fast incremental rescans
+- **Structured output** — JSON + Markdown with severity classification
+- **Exit codes** — 0=clean, 1=findings, 2=error (CI/CD friendly)
+- **Multi-account** — comma-separated GitHub/GitLab usernames
+- **Private repos** — token-authenticated discovery and cloning
+
+## User Exclusions
+
+The scanner supports a `user-ignores.toml` file for personal exclusions
+that never get committed:
+
+```toml
+[gitleaks_allowlist]
+patterns = [".*@example\\.com", "contact@mysite\\.com"]
+
+[gitleaks_file_excludes]
+patterns = ["package-lock\\.json$", "go\\.sum$"]
+
+[gitleaks_rule_excludes]
+rules = ["pii-phone"]
+
+[ai_exclusions]
+notes = ["contact@mysite.com is my public email — not a leak"]
+```
+
+Gitleaks patterns filter findings post-scan. File and rule excludes drop
+entire categories. AI exclusions get injected into Claude's prompt as
+context before analysis.
+
+## Architecture
+
+A single Docker container running a Python pipeline:
+
+1. **CLI** — argparse, flags control which scanners run
+2. **Discovery** — GitHub + GitLab APIs with pagination
+3. **Clone Manager** — mirror clone with token injection and redaction
+4. **gitleaks** — custom `.gitleaks.toml` with PII rules, severity classification
+5. **AI Scanner** — content extraction, Bedrock API, structured JSON output
+6. **Reporter** — JSON + Markdown generation, optional SMTP delivery
+
+The AI scanner extracts source files from HEAD plus the last 50 commit
+messages, capped at 80,000 characters per repo.
+
+## Web Frontend
+
+There's also a PWA for running scans from a phone — enter GitHub/GitLab
+usernames or paste individual repo URLs, pick a scan type, and hit scan.
+Results stored in PostgreSQL, browse past scans with severity filters.
+
+The frontend spawns the scanner container via Docker socket and parses
+the output JSON. Findings are paginated for large scan results.
+
+## Tech Stack
+
+- **Runtime:** Python 3.12, Docker
+- **Scanning:** gitleaks, custom TOML config
+- **AI:** Claude via AWS Bedrock (Haiku for cost-effective scanning)
+- **Frontend:** FastAPI, PostgreSQL, Tailwind, mkcert HTTPS
+- **Output:** JSON, Markdown, SMTP
+
+## What's Next
+
+**Trace + Scrub** — feed findings into a history tracer (`git log -S` to find
+the first commit a secret appeared), then generate `git-filter-repo` scripts
+to rewrite history. Finding a secret is only useful if you can also remove it.
+
+## Status
+
+Built and tested, producing actionable results. TLS moved from baked-in
+uvicorn to an Nginx sidecar — app containers only accessible on the internal
+Docker network, HTTPS on the exposed port. Built with
+[The Forge](https://github.com/Seven7een/the-forge) framework conventions.

@@ -1,0 +1,103 @@
+---
+title: "Voice Diary"
+description: "A self-hosted PWA that records voice notes throughout the day and compiles them into diary entries using Claude at 3 AM."
+problem: "I wanted a voice diary — talk into my phone throughout the day and wake up to a written diary entry. Nothing does this without shipping audio to someone else's cloud."
+solution: "A PWA running on a home server that records voice notes, then transcribes locally via Whisper and compiles them into diary entries using Claude at 3 AM daily."
+tags: ["python", "fastapi", "postgresql", "docker", "aws-bedrock", "pwa"]
+pubDatetime: 2026-03-22
+featured: true
+---
+
+## The Problem
+
+I wanted a voice diary — talk into my phone throughout the day, and wake up
+to a written diary entry the next morning. No typing, no manual transcription,
+no third-party service holding my recordings.
+
+Nothing on the market does this without shipping your audio to someone else's
+cloud. So I built it.
+
+## How It Works
+
+Voice Diary is a Progressive Web App running on my home server. Add it to
+your home screen and it works like a native app — tap, record, done.
+
+1. **Record** — tap the mic, talk, tap again
+2. **Store** — audio saved to PostgreSQL + filesystem
+3. **Transcribe** — each recording converted to text
+4. **Compile** — Claude writes a diary entry from the day's transcripts
+5. **Read** — open the app next morning, entry is waiting
+
+Transcription supports two backends, switchable with one environment variable.
+**faster-whisper** runs entirely on CPU with no network calls — about a second
+per recording. **AWS Transcribe** streams audio over HTTP/2 for higher accuracy.
+Either way, the text goes to Claude via AWS Bedrock, which writes a cohesive
+diary entry that preserves your voice and weaves multiple recordings into a
+narrative.
+
+## Features
+
+- **One-tap recording** — PWA with MediaRecorder API, works offline
+- **Self-hosted** — all audio stays on your hardware
+- **Dual transcription** — local Whisper or AWS Transcribe
+- **AI compilation** — Claude writes diary entries from transcripts
+- **Scheduled** — auto-compiles at 3 AM daily
+- **Manual compile + recompile** — on-demand generation, add recordings and recompile
+- **HTTPS** — mkcert certificates for secure mic access
+- **Dark mobile UI** — designed for phone-first usage
+
+## Architecture
+
+Two Docker containers: the FastAPI app and PostgreSQL.
+
+- **FastAPI** — API key auth, recording management, compilation pipeline
+- **PostgreSQL** — recordings metadata + diary entries
+- **Filesystem** — audio files with magic-byte format detection
+- **APScheduler** — daily compilation trigger
+- **Transcription** — faster-whisper (local) or AWS Transcribe (streaming)
+- **AWS Bedrock** — Claude for diary compilation from text transcripts
+
+## Tech Stack
+
+- **Backend:** Python 3.12, FastAPI, SQLAlchemy, APScheduler
+- **Frontend:** Vanilla JS PWA, Tailwind CSS, MediaRecorder API
+- **Database:** PostgreSQL 17
+- **Transcription:** faster-whisper (int8 quantised, CPU) or AWS Transcribe Streaming
+- **AI:** Claude via AWS Bedrock
+- **Infrastructure:** Docker Compose, mkcert HTTPS, ZeroTier
+
+## Challenges
+
+**Chrome lies about audio format.** The MediaRecorder API claims to record
+OGG/Opus, but Chrome actually produces WebM containers. The app was saving
+files as `.ogg` and serving them with the wrong content type — browsers saw
+the mismatch and refused to play. Fixed with magic byte detection: read the
+first 4 bytes on upload and streaming to determine the actual format.
+
+**HTML audio elements can't send headers.** The `<audio>` tag makes GET
+requests with no way to attach auth headers. Every playback attempt returned
+401. Fixed by accepting the API key as a query parameter on audio routes.
+
+**Mic access requires HTTPS.** Browsers block `getUserMedia()` on non-HTTPS
+origins. Since the app runs on a private network IP, not localhost, real
+HTTPS was required — solved with mkcert generating locally-trusted
+certificates.
+
+**Bedrock doesn't support audio.** The original plan was to send recordings
+directly to Claude for both transcription and compilation in one call.
+Bedrock doesn't support audio content blocks — not via the Converse API, not
+via InvokeModel. The fix was a two-stage pipeline: Whisper handles
+speech-to-text locally, then Claude gets clean text for the creative work.
+Ended up cleaner than the original design.
+
+**TLS everywhere.** Originally the app handled HTTPS itself via uvicorn's
+`--ssl-keyfile` flag — cert paths baked into the app container, healthchecks
+needing `ssl._create_unverified_context()` hacks. Moved to an Nginx TLS
+sidecar: app runs plain HTTP internally, Nginx terminates TLS on the exposed
+port. Cleaner separation, no SSL hacks in healthchecks, and the same pattern
+across every service.
+
+## Status
+
+Live and recording daily. Built with
+[The Forge](https://github.com/Seven7een/the-forge) framework conventions.

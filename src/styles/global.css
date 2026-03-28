@@ -57,8 +57,8 @@ body {
   --tw-prose-counters: var(--color-text-muted);
   --tw-prose-bullets: var(--color-text-muted);
   --tw-prose-hr: var(--color-border);
-  --tw-prose-quotes: var(--color-text-secondary);
-  --tw-prose-quote-borders: var(--color-border-hover);
+  --tw-prose-quotes: var(--color-text-primary);
+  --tw-prose-quote-borders: var(--color-accent);
   --tw-prose-captions: var(--color-text-muted);
   --tw-prose-code: var(--color-accent);
   --tw-prose-pre-code: var(--color-text-primary);
@@ -73,6 +73,7 @@ body {
 
 .prose code:not(pre code) {
   background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
   padding: 0.15em 0.4em;
   border-radius: 0.25rem;
   font-size: 0.875em;
@@ -87,6 +88,11 @@ body {
   background-color: var(--color-bg-secondary) !important;
   border: 1px solid var(--color-border);
   border-radius: 0.5rem;
+}
+
+/* Activate Shiki dark theme colours (site is dark-only) */
+.prose pre code span[style] {
+  color: var(--shiki-dark) !important;
 }
 
 .prose img {

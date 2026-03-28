@@ -1,0 +1,213 @@
+---
+title: "Building a Company of AI Agents"
+description: "How I went from a blank Ubuntu NUC to a self-managing team of four AI agents in one afternoon — and what I learned about trust, security, and letting go."
+pubDatetime: 2026-03-22
+tags: ["ai", "automation", "security", "docker", "self-hosted"]
+featured: true
+---
+
+I had a simple problem: I'm running a home server that collects real-time data
+via Docker containers. Uptime matters. Security matters. And I was tired of
+being the only person who could manage it.
+
+So I built a company. Not a real company — a hierarchy of AI agents, each
+with a distinct role and set of permissions. They coordinate with each other,
+report through a chain of command, and operate within strict safety boundaries.
+The whole thing was set up in a single afternoon using
+[OpenClaw](https://github.com/openclaw/openclaw) as the agent platform.
+
+But first, I had to get the platform running.
+
+## The Setup Gauntlet
+
+The hardware is a Beelink SER mini PC — Ryzen 7, 12 GB RAM, 500 GB NVMe —
+sitting on a private ZeroTier mesh network. All services bind to the ZeroTier
+interface. Nothing is exposed to the public internet except SSH.
+
+OpenClaw's gateway binds to `127.0.0.1` by default. Great for security,
+useless for remote management over ZeroTier. Binding to a non-loopback address
+triggers TLS enforcement. I didn't want to bypass that, so the solution was
+an SSH tunnel — simple and properly encrypted.
+
+Next problem: environment variables in `.bashrc` work perfectly in an
+interactive shell. They vanish completely when a systemd service starts. This
+bit me twice — once for the Telegram bot token, once for the AWS region. The
+fix was standard config files and systemd service overrides.
+
+Then the model IDs. AWS Bedrock has three ways to reference the same model —
+base ID, cross-region inference profile, and provisioned throughput ARN. Only
+the cross-region profile works for on-demand usage. The others either require
+provisioned capacity or silently fail. An hour of debugging for a one-character
+prefix difference.
+
+And then there was the `:wq` incident. While editing a systemd override, I
+muscle-memoried a `:wq` — but the editor was nano, not vim. The `:wq` got
+appended to the AWS region value, turning `us-east-1` into `us-east-1:wq`.
+The error — `ENOTFOUND bedrock-runtime.us-east-1:wq.amazonaws.com` — was
+obvious in hindsight but baffling at midnight.
+
+With the gateway finally running, I could start building agents.
+
+## The Company
+
+- **CEO (Me)** — Lead Developer
+  - **Aiden** 🎯 — CTO / Control Plane
+    - **Tux** 🐧 — Linux IT Admin
+    - **Koda** 🔐 — DevSecOps Engineer
+    - **Seb** 📋 — Personal Assistant
+
+Each agent runs as a separate entity on the same gateway. They each have
+their own Telegram bot, workspace with memory files, personality document
+(`SOUL.md`), and safety constraints. I talk to Aiden. Aiden talks to everyone
+else. Every morning at 6 AM, Aiden pings each agent and compiles a standup
+that's waiting when I wake up.
+
+The personality files aren't flavour text — they're the primary behavioural
+guardrails. Aiden is sharp and opinionated, doesn't do the work himself.
+Tux is the cautious sysadmin where `--dry-run` is a love language. Koda
+writes code with a security-first mindset. Seb handles calendar and
+scheduling.
+
+But personalities only go so far. The real question was: how do you give
+agents enough access to be useful without letting them break things?
+
+## The Security Problem
+
+The Docker containers collect real-time data. Any unplanned restart means
+permanent data loss. So the non-negotiable rule: **no agent can restart
+services or install packages without explicit approval through the chain
+of command.**
+
+That's a personality constraint — it works until it doesn't. So I added
+a second layer.
+
+OpenClaw can deny specific tools per agent at the platform level. Seb has
+shell access, browser automation, and system control all denied in config.
+He physically cannot run commands, even if somehow prompted to. Why Seb
+specifically? He's the agent that will eventually read untrusted external
+content — emails, calendar invites, webhook data. If a malicious email tried
+to trick him into running destructive commands, the tools don't exist in his
+environment. Defence in depth.
+
+For the other agents, the constraints are softer. Koda's personality says he
+shouldn't run `sudo` — those requests go through Tux. This works because all
+agents run as the same Linux user. If one has `sudo`, they all technically do.
+We considered exec allowlists (cosmetic once you allow `bash`) and separate
+OS users (proper but complex). We went with the soft constraint for now.
+Security is iterative, not binary.
+
+With the security model in place, the first real test: could the agents
+actually do useful work?
+
+## First Task: Backing Up the Database
+
+The most urgent problem: zero backups on the data collection database.
+
+I told Aiden I wanted backups. Aiden tasked Koda with an assessment. Koda
+explored the system, mapped the Docker architecture, and came back with a
+report: the full stack, data at risk, three backup strategies with pros and
+cons, tools needed, and questions for me.
+
+After getting answers, Koda built the pipeline: hourly `pg_dump` (zero
+downtime), daily compressed volume tarballs, daily upload to Google Drive
+via rclone. Before activating, we did a full restore verification — temporary
+database, restore the dump, compare row counts. 4,404 rows live, 4,403 in
+the backup. The one-row difference was a data point that arrived during the
+test.
+
+Backups secured. But how vulnerable was the server itself?
+
+## The SOC Sweep
+
+Tux ran a full system audit. The good news: no reverse shells, no rogue
+processes, no SSH brute force attempts. Standard SUID binaries, no unexpected
+cron jobs or SSH keys.
+
+The bad news: plaintext credentials in `.bashrc` — world-readable. File
+sharing and remote desktop bound to all interfaces, not just the private
+network. Three dormant user accounts, two with sudo privileges, one that had
+never logged in. 17 GB of Docker garbage from abandoned projects.
+
+Tux cleaned it all up in one pass. Secrets removed, permissions locked,
+dormant users deleted, services rebound to the private network, garbage
+cleared, packages updated. Zero downtime throughout.
+
+That was the moment it clicked. I hadn't asked Tux to check dormant users
+or Docker garbage. He found them because finding problems is his job, and his
+personality file gives him latitude to investigate.
+
+## What the Agents Built
+
+With the infrastructure secured, Koda shifted to building. He writes code via
+ephemeral sub-agents — spins one up per task, it reports back, then it's gone.
+Tux handles anything that needs system-level access. Aiden orchestrates.
+
+In the same afternoon, they shipped:
+
+- **[Voice Diary](/projects/voice-diary)** — a PWA for recording voice notes
+  that get transcribed and compiled into diary entries by Claude at 3 AM.
+  Self-hosted, all audio stays local.
+- **[Repo Security Scanner](/projects/repo-scanner)** — a Docker container
+  combining gitleaks with Claude AI to scan GitHub/GitLab accounts for leaked
+  secrets and PII. Includes a web frontend for running scans from a phone.
+- **Automated backups** — hourly database dumps, daily full backups to Google
+  Drive with 7-day retention. Restore-verified.
+
+The next week, Koda standardised TLS across every service — each project now
+runs an Nginx sidecar that terminates HTTPS, with the app containers only
+accessible on the internal Docker network. No more baked-in certs or exposed
+HTTP ports. One generic pattern across all projects.
+
+## What I Learned
+
+**Agent-to-agent communication needs explicit design.** The first time I
+tasked Koda, he did the work perfectly — then just stopped. No notification.
+He didn't know he was supposed to report back. I had to add explicit reporting
+instructions to every agent's workspace.
+
+**Agents forget.** They wake up fresh every session, and memory files are
+their only continuity. After a week, both the sysadmin and the DevSecOps
+agent started flagging a backup system as missing — one they'd built
+themselves. The standup originally polled each agent live at 6 AM; they'd
+time out and the standup wouldn't send. Fixed by having each agent pre-submit
+their report 15 minutes early, so the compiler just reads what's already there.
+Designing for amnesia is half the architecture.
+
+**The manager pattern works.** One point of contact who delegates to
+specialists is dramatically better than managing agents individually. Aiden
+translated plain English into scoped tasks for the right agent and handled
+diagnosis when things went wrong.
+
+**The manager can also be the cowboy.** Aiden's personality says he delegates
+and verifies — he doesn't do the work himself. In practice, under time
+pressure, he started editing configs and restarting containers directly.
+One bad change (`APPLICATION_PROTOCOL: https`) broke the healthcheck chain,
+killed the data scraper, and caused 9 minutes of downtime. The fix was adding
+it to his safety constraints in writing. Personality files work, but they
+work better when failures get encoded back into them.
+
+**The first audit always finds something.** World-readable secrets, exposed
+services, dormant sudo accounts — none malicious, just accumulated neglect.
+Having an agent whose job is to look for these things is genuinely valuable.
+
+**Opus for thinking, Sonnet for doing.** The first week cost $472 — 99% on
+Opus conversations. Moving the three sub-agents to Sonnet dropped costs
+dramatically while keeping quality. The manager stays on Opus because
+orchestration and judgement need the extra capability. The workers don't.
+
+**Security is iterative.** Start with personality constraints, discover
+their limits, add platform enforcement, hit the next boundary, accept a
+pragmatic middle ground. Perfect security on day one means no agents on day
+one.
+
+## What's Next
+
+- Calendar and email integration for the personal assistant
+- Trace findings back to their first commit, then generate scripts to scrub
+  them from history
+- Separate OS users per agent for proper privilege isolation
+
+---
+
+*Built with [OpenClaw](https://github.com/openclaw/openclaw), powered by
+Claude via AWS Bedrock.*

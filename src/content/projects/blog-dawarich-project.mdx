@@ -1,0 +1,99 @@
+---
+title: "Timeline Builder"
+description: "A self-hosted location tracking pipeline — scrapes Google Maps shared locations into Dawarich, a privacy-first Google Timeline alternative."
+problem: "Google lets people share their live location with you, but there's no timeline or history — you can only see where they are right now."
+solution: "A headless browser scraper that captures shared locations every 2 minutes, building the timeline Google doesn't give you, stored in a self-hosted Dawarich instance."
+tags: ["python", "playwright", "postgresql", "docker", "self-hosted"]
+pubDatetime: 2026-03-22
+featured: true
+---
+
+Google Maps lets someone share their live location with you — but that's all
+you get. A dot on a map, right now. No history, no timeline, no way to look
+back. If you want a timeline of a shared location, you're on your own.
+
+This project builds that missing timeline by scraping the shared location
+every two minutes and feeding it into
+[Dawarich](https://github.com/Freika/dawarich) — an open-source Google
+Timeline alternative running on your own hardware.
+
+## How It Works
+
+A headless Chromium browser runs inside a Docker container, authenticated to
+a Google account with shared location access. Every two minutes, it hits the
+Google Maps location sharing endpoint, extracts coordinates, and pushes them
+to Dawarich via the OwnTracks API.
+
+Dawarich handles storage, geocoding, and visualisation — maps, heatmaps,
+stats, and export.
+
+## Architecture
+
+1. **Google Maps Shared Location** — polled every 120 seconds
+2. **Scraper Container** — Python + Playwright + headless Chromium
+3. **Dawarich** — Rails web UI + API, with Redis for job queuing
+4. **Sidekiq Workers** — background processing
+5. **PostgreSQL + PostGIS** — all location history, backed up daily
+
+## Features
+
+- **Automated collection** — every 2 minutes, zero manual input
+- **Self-hosted** — all data stays on your hardware
+- **Full Dawarich UI** — maps, heatmaps, stats, export
+- **Email alerts** — notification if the scraper loses its session
+- **Zero-touch** — runs unattended, survives host reboots without re-auth
+- **Automated backups** — daily database dumps to Google Drive
+- **HTTPS-only** — Nginx TLS sidecar, no exposed HTTP ports
+
+## Tech Stack
+
+- **Scraper:** Python 3.12, Playwright, headless Chromium
+- **Application:** Dawarich (Ruby on Rails, Sidekiq)
+- **Database:** PostgreSQL 17 with PostGIS
+- **Cache/Queue:** Redis
+- **Infrastructure:** Docker Compose, ZeroTier
+
+## Challenges
+
+**Google Auth in a headless browser.** Google aggressively blocks automated
+logins — it checks browser fingerprints, viewport dimensions, user agent
+strings. The scraper runs a full Chromium instance, not a lightweight HTTP
+client, and mimics a real browser session. Auth is done manually once, then
+the browser profile persists cookies across container restarts.
+
+**Reverse-engineering the response format.** Google's location sharing isn't
+a documented API. The scraper intercepts the data that Google Maps loads
+when you view a shared location. Figuring out which nested array contains
+the coordinates, timestamp, and accuracy was trial and error with a lot of
+JSON staring.
+
+**Keeping the session alive.** The browser profile lives on a Docker volume.
+If it gets corrupted or Google invalidates the session, the pipeline stops.
+The scraper monitors its own health and sends an email alert if collection
+stops. Sessions have survived weeks including host reboots.
+
+**Chromium leaks memory.** Headless Chromium running Playwright accumulates
+memory over time — hit 2.4 GB and OOM'd after five days of continuous
+operation. The pragmatic fix: a 2 GB Docker memory cap as a ceiling, plus a
+daily scheduled restart at 3 AM. One 30-second gap per day, memory stays
+bounded. Root cause investigation is backlogged — likely the browser context
+not fully releasing resources between scrape cycles.
+
+**HTTPS reverse proxy.** Dawarich is a third-party Rails app — can't bake
+TLS into it. An Nginx sidecar terminates HTTPS, but Rails generates redirect
+URLs using its internal protocol. After login, it would redirect to
+`http://` without the port, breaking the flow. The fix was a combination of
+`proxy_redirect` rules, `X-Forwarded-Proto` headers, Origin header clearing
+for CSRF compatibility, and passing the port in the Host header. Fiddly, but
+now it's a reusable pattern.
+
+## Limitations
+
+- Depends on Google not changing their location sharing internals
+- Browser session can expire, requiring manual re-authentication (rare)
+- Single point of failure on the hardware (mitigated by daily off-site backups)
+
+## Links
+
+- [Dawarich](https://github.com/Freika/dawarich) — the open-source Google
+  Timeline alternative
