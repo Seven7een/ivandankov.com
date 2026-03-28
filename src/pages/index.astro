@@ -21,8 +21,8 @@ const recentPosts = posts.filter((p) => !p.data.featured).slice(0, SITE.postPerI
 const bentoItems = [
   {
     label: 'Current Stack',
-    value: 'AWS, Linux, Python, Bash',
-    detail: 'Finding the best tool for the job',
+    value: 'AWS, Linux, Python, Bash, Claude',
+    detail: 'Always finding the best tool for the job, with a few favourites.',
   },
   {
     label: 'Primary Focus',
@@ -72,24 +72,6 @@ const bentoItems = [
     <BentoGrid items={bentoItems} />
   </section>
 
-  <!-- Featured Projects -->
-  {featuredProjects.length > 0 && (
-    <section class="mb-12 space-y-4">
-      <h2 class="text-xl font-semibold text-[var(--color-text-primary)]">Featured Projects</h2>
-      <div class="grid gap-4">
-        {featuredProjects.map((project) => (
-          <Card
-            href={`/projects/${project.id}`}
-            title={project.data.title}
-            description={project.data.description}
-            tags={project.data.tags}
-            datetime={project.data.pubDatetime.toISOString()}
-          />
-        ))}
-      </div>
-    </section>
-  )}
-
   <!-- Featured Posts -->
   {featuredPosts.length > 0 && (
     <section class="mb-12 space-y-4">
@@ -102,6 +84,24 @@ const bentoItems = [
             description={post.data.description}
             tags={post.data.tags}
             datetime={post.data.pubDatetime.toISOString()}
+          />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Featured Projects -->
+  {featuredProjects.length > 0 && (
+    <section class="mb-12 space-y-4">
+      <h2 class="text-xl font-semibold text-[var(--color-text-primary)]">Featured Projects</h2>
+      <div class="grid gap-4">
+        {featuredProjects.map((project) => (
+          <Card
+            href={`/projects/${project.id}`}
+            title={project.data.title}
+            description={project.data.description}
+            tags={project.data.tags}
+            datetime={project.data.pubDatetime.toISOString()}
           />
         ))}
       </div>

@@ -4,7 +4,7 @@
 
 ```bash
 npm install              # Install dependencies
-npm run dev              # Dev server at http://localhost:4321
+npm run dev              # Dev server (HTTPS if DEV_TLS_* set in .env)
 npm run dev:full         # Dev server + serverless functions (requires vercel CLI)
 ```
 

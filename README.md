@@ -21,7 +21,7 @@ git clone https://github.com/Seven7een/ivandankov.com.git
 cd ivandankov.com
 cp .env.example .env    # Fill in Gmail credentials for contact form
 npm install
-npm run dev             # Astro dev server at http://localhost:4321
+npm run dev             # Astro dev server (HTTPS if DEV_TLS_* set in .env)
 npm run dev:full        # Includes serverless functions (requires vercel CLI)
 npm run build           # Production build + Pagefind indexing
 ```
