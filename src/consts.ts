@@ -27,6 +27,11 @@ export const SOCIAL_LINKS = [
 
 export const CREDLY_BADGES: { src: string; href: string; alt: string }[] = [
   {
+    src: 'https://images.credly.com/size/340x340/images/bd31ef42-d460-493e-8503-39592aaf0458/image.png',
+    href: 'https://www.credly.com/badges/bde03054-78b3-424d-b384-74c9a1be838a/public_url',
+    alt: 'AWS Certified DevOps Engineer – Professional',
+  },
+  {
     src: 'https://images.credly.com/size/340x340/images/52c6e5ac-9516-4944-a4df-e31b23c9bbf2/blob',
     href: 'https://www.credly.com/badges/6b0858ec-1191-4ffb-9386-1ddc96aa1cad/public_url',
     alt: 'AWS Certified Generative AI Developer - Professional',
