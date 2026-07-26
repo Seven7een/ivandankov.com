@@ -42,13 +42,18 @@ export const CREDLY_BADGES: { src: string; href: string; alt: string }[] = [
     alt: 'AWS Certified Generative AI Developer - Professional Early Adopter',
   },
   {
-    src: 'https://images.credly.com/size/340x340/images/7cf036b0-c609-4378-a7be-9969e1dea7ab/blob',
-    href: 'https://www.credly.com/badges/b8b76a9b-a4e4-4d1e-8ada-99755b59d4bb/public_url',
-    alt: 'AWS Knowledge: Cloud Essentials',
+    src: 'https://images.credly.com/size/340x340/images/53acdae5-d69f-4dda-b650-d02ed7a50dd7/image.png',
+    href: 'https://www.credly.com/badges/00295df3-e32d-443b-880a-53eaec234d55/public_url',
+    alt: 'AWS Certified Security – Specialty',
   },
   {
     src: 'https://images.credly.com/size/340x340/images/0e284c3f-5164-4b21-8660-0d84737941bc/image.png',
     href: 'https://www.credly.com/badges/ac5a8c88-d400-4b04-960d-1407f06e50be/public_url',
     alt: 'AWS Certified Solutions Architect - Associate',
+  },
+  {
+    src: 'https://images.credly.com/size/340x340/images/7cf036b0-c609-4378-a7be-9969e1dea7ab/blob',
+    href: 'https://www.credly.com/badges/b8b76a9b-a4e4-4d1e-8ada-99755b59d4bb/public_url',
+    alt: 'AWS Knowledge: Cloud Essentials',
   },
 ];
