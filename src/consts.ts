@@ -37,11 +37,6 @@ export const CREDLY_BADGES: { src: string; href: string; alt: string }[] = [
     alt: 'AWS Certified Generative AI Developer - Professional',
   },
   {
-    src: 'https://images.credly.com/size/340x340/images/9de9a2f7-3259-4720-bb74-095563bb1e49/blob',
-    href: 'https://www.credly.com/badges/f96a13c5-bef2-4617-8bfd-b998317dd51a/public_url',
-    alt: 'AWS Certified Generative AI Developer - Professional Early Adopter',
-  },
-  {
     src: 'https://images.credly.com/size/340x340/images/53acdae5-d69f-4dda-b650-d02ed7a50dd7/image.png',
     href: 'https://www.credly.com/badges/00295df3-e32d-443b-880a-53eaec234d55/public_url',
     alt: 'AWS Certified Security – Specialty',
@@ -50,6 +45,11 @@ export const CREDLY_BADGES: { src: string; href: string; alt: string }[] = [
     src: 'https://images.credly.com/size/340x340/images/0e284c3f-5164-4b21-8660-0d84737941bc/image.png',
     href: 'https://www.credly.com/badges/ac5a8c88-d400-4b04-960d-1407f06e50be/public_url',
     alt: 'AWS Certified Solutions Architect - Associate',
+  },
+  {
+    src: 'https://images.credly.com/size/340x340/images/9de9a2f7-3259-4720-bb74-095563bb1e49/blob',
+    href: 'https://www.credly.com/badges/f96a13c5-bef2-4617-8bfd-b998317dd51a/public_url',
+    alt: 'AWS Certified Generative AI Developer - Professional Early Adopter',
   },
   {
     src: 'https://images.credly.com/size/340x340/images/7cf036b0-c609-4378-a7be-9969e1dea7ab/blob',
